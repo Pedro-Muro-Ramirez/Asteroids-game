@@ -1,8 +1,13 @@
 import inspect
 import json
 import math
+import sys
 from datetime import datetime
 from typing import NotRequired, TypedDict
+
+# In the browser (pygbag/WebAssembly) there is no writable local filesystem,
+# so disk logging is disabled there.
+_FILE_LOGGING_ENABLED = sys.platform != "emscripten"
 
 class SpriteInfo(TypedDict):
     type: str
@@ -31,6 +36,9 @@ _start_time = datetime.now()
 
 def log_state() -> None:
     global _frame_count, _state_log_initialized
+
+    if not _FILE_LOGGING_ENABLED:
+        return
 
     # Stop logging after `_MAX_SECONDS` seconds
     if _frame_count > _FPS * _MAX_SECONDS:
@@ -134,6 +142,9 @@ def log_state() -> None:
 
 def log_event(event_type: str, **details: object) -> None:
     global _event_log_initialized
+
+    if not _FILE_LOGGING_ENABLED:
+        return
 
     now = datetime.now()
 

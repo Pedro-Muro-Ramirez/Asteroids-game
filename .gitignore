@@ -10,3 +10,7 @@ game_events.jsonl
 
 # Virtual environments
 .venv
+
+# pygbag web-build staging (output is published from docs/)
+webgame/
+.webbuild/

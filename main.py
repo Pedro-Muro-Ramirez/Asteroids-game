@@ -1,5 +1,5 @@
+import asyncio
 import pygame
-import sys
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT
 from logger import log_state, log_event
 from player import Player
@@ -7,7 +7,7 @@ from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
 
-def main():
+async def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
@@ -33,7 +33,7 @@ def main():
             if asteroid.collides_with(player):
                 log_event("player_hit")
                 print("Game over!")
-                sys.exit()
+                return
         for asteroid in asteroids:
             for shot in shots: 
                 if asteroid.collides_with(shot):
@@ -44,6 +44,7 @@ def main():
             draw.draw(screen)
         pygame.display.flip()
         dt = clock.tick(60) / 1000
+        await asyncio.sleep(0)  # yield to the browser event loop (required by pygbag)
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
